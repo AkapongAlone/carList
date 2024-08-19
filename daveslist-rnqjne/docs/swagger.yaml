@@ -1,0 +1,648 @@
+definitions:
+  requests.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+        x-order: "0"
+    required:
+    - password
+    - username
+    type: object
+  requests.MessageRequest:
+    properties:
+      message:
+        type: string
+      toUserID:
+        type: integer
+    type: object
+  requests.Reply:
+    properties:
+      text:
+        type: string
+    required:
+    - text
+    type: object
+  requests.RequestCategory:
+    properties:
+      category_name:
+        type: string
+      is_public:
+        type: boolean
+    required:
+    - category_name
+    - is_public
+    type: object
+  requests.RequestHideList:
+    properties:
+      is_show:
+        type: boolean
+    type: object
+  requests.RequestSellingCar:
+    type: object
+  responses.BadRequestErrorResponse:
+    properties:
+      code:
+        example: 400
+        type: integer
+        x-order: "1"
+      error:
+        properties:
+          field:
+            type: object
+            x-order: "1"
+          message:
+            example: bad request error message
+            type: string
+            x-order: "0"
+        type: object
+        x-order: "2"
+      status:
+        example: false
+        type: boolean
+        x-order: "0"
+    type: object
+  responses.CarCategoriesResp:
+    properties:
+      car_list:
+        items:
+          $ref: '#/definitions/responses.ListResp'
+        type: array
+      category_name:
+        type: string
+    type: object
+  responses.FileResp:
+    properties:
+      url:
+        type: string
+    type: object
+  responses.InternalServerErrorResponse:
+    properties:
+      code:
+        example: 500
+        type: integer
+        x-order: "1"
+      error:
+        properties:
+          field:
+            type: object
+            x-order: "1"
+          message:
+            example: internal server error
+            type: string
+            x-order: "0"
+        type: object
+        x-order: "2"
+      status:
+        example: false
+        type: boolean
+        x-order: "0"
+    type: object
+  responses.ListResp:
+    properties:
+      content:
+        type: string
+      file_img:
+        items:
+          $ref: '#/definitions/responses.FileResp'
+        type: array
+      reply:
+        items:
+          $ref: '#/definitions/responses.ReplyResp'
+        type: array
+      title:
+        type: string
+    type: object
+  responses.LoginResponse:
+    properties:
+      access_token:
+        type: string
+    type: object
+  responses.MessageResp:
+    properties:
+      createdAt:
+        type: string
+      fromUserID:
+        type: integer
+      message:
+        type: string
+      toUserID:
+        type: integer
+    type: object
+  responses.NoData:
+    type: object
+  responses.NoDataResponse:
+    properties:
+      code:
+        type: integer
+        x-order: "1"
+      data:
+        allOf:
+        - $ref: '#/definitions/responses.NoData'
+        x-order: "2"
+      status:
+        example: true
+        type: boolean
+        x-order: "0"
+    type: object
+  responses.ReplyResp:
+    properties:
+      text:
+        type: string
+    type: object
+  responses.Success:
+    properties:
+      code:
+        type: integer
+      data: {}
+      status:
+        type: boolean
+    type: object
+  responses.TokenResponse:
+    properties:
+      data:
+        $ref: '#/definitions/responses.LoginResponse'
+      status:
+        example: true
+        type: boolean
+    type: object
+  responses.UnauthorizedErrorResponse:
+    properties:
+      code:
+        example: 401
+        type: integer
+        x-order: "1"
+      error:
+        properties:
+          field:
+            type: object
+            x-order: "1"
+          message:
+            example: unauthorized to access the resource
+            type: string
+            x-order: "0"
+        type: object
+        x-order: "2"
+      status:
+        example: false
+        type: boolean
+        x-order: "0"
+    type: object
+  responses.Validate:
+    properties:
+      code:
+        example: 422
+        type: integer
+        x-order: "1"
+      error:
+        properties:
+          field:
+            additionalProperties:
+              type: string
+            type: object
+            x-order: "1"
+          message:
+            example: validate error
+            type: string
+            x-order: "0"
+        type: object
+        x-order: "2"
+      status:
+        type: boolean
+        x-order: "0"
+    type: object
+info:
+  contact: {}
+paths:
+  /auth/login:
+    post:
+      operationId: login
+      parameters:
+      - description: Login data
+        in: body
+        name: Login
+        required: true
+        schema:
+          $ref: '#/definitions/requests.LoginRequest'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.TokenResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.Validate'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - authentication
+  /message:
+    get:
+      operationId: readMessage
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: from message request
+        in: query
+        name: from_user_id
+        required: true
+        type: string
+      - description: tp message request
+        in: query
+        name: to_user_id
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/responses.MessageResp'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.Validate'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - message
+    post:
+      operationId: sendMessage
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Login data
+        in: body
+        name: SendMessage
+        required: true
+        schema:
+          $ref: '#/definitions/requests.MessageRequest'
+      responses:
+        "201":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "422":
+          description: Unprocessable Entity
+          schema:
+            $ref: '#/definitions/responses.Validate'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - message
+  /sell_car/car_list:
+    get:
+      operationId: get_sell_car
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/responses.Success'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/responses.CarCategoriesResp'
+                  type: array
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - car_list
+    post:
+      description: Create a new car listing with associated files
+      operationId: create_car_list
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Category ID
+        in: formData
+        name: category_id
+        required: true
+        type: integer
+      - description: Title
+        in: formData
+        name: title
+        required: true
+        type: string
+      - description: Content
+        in: formData
+        name: content
+        required: true
+        type: string
+      - collectionFormat: csv
+        description: Uploaded files
+        in: formData
+        items:
+          type: file
+        name: file
+        required: true
+        type: array
+      - description: Is the listing public?
+        in: formData
+        name: is_public
+        required: true
+        type: boolean
+      responses:
+        "201":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      summary: Create a new car listing
+      tags:
+      - car_list
+  /sell_car/car_list/{id}:
+    delete:
+      operationId: delete_car_list
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: selling car id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "204":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - car_list
+    post:
+      operationId: reply_sell_car
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: reply data
+        in: body
+        name: reply
+        required: true
+        schema:
+          $ref: '#/definitions/requests.Reply'
+      - description: selling car id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "201":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - reply
+    put:
+      operationId: edit_car_list
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: selling car data
+        in: body
+        name: selling
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RequestSellingCar'
+      - description: selling car id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "202":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - car_list
+  /sell_car/car_list/{id}/hide:
+    put:
+      operationId: hide_car_list
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: want to hide or not
+        in: body
+        name: hide
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RequestHideList'
+      - description: car_list id
+        in: path
+        name: id
+        required: true
+        type: string
+      responses:
+        "202":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - car_list
+  /sell_car/category:
+    post:
+      operationId: create-category
+      parameters:
+      - description: category data data
+        in: body
+        name: category_data
+        required: true
+        schema:
+          $ref: '#/definitions/requests.RequestCategory'
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "201":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - category
+  /sell_car/category/{id}:
+    delete:
+      operationId: delete-category
+      parameters:
+      - description: category id
+        in: path
+        name: id
+        required: true
+        type: string
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      responses:
+        "204":
+          description: OK
+          schema:
+            $ref: '#/definitions/responses.NoDataResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/responses.BadRequestErrorResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/responses.UnauthorizedErrorResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/responses.InternalServerErrorResponse'
+      tags:
+      - category
+swagger: "2.0"

@@ -1,0 +1,970 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "authentication"
+                ],
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "description": "Login data",
+                        "name": "Login",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.LoginRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.TokenResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Validate"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/message": {
+            "get": {
+                "tags": [
+                    "message"
+                ],
+                "operationId": "readMessage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "from message request",
+                        "name": "from_user_id",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "tp message request",
+                        "name": "to_user_id",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/responses.MessageResp"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Validate"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "message"
+                ],
+                "operationId": "sendMessage",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "Login data",
+                        "name": "SendMessage",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.MessageRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable Entity",
+                        "schema": {
+                            "$ref": "#/definitions/responses.Validate"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/sell_car/car_list": {
+            "get": {
+                "tags": [
+                    "car_list"
+                ],
+                "operationId": "get_sell_car",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/responses.Success"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/responses.CarCategoriesResp"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a new car listing with associated files",
+                "tags": [
+                    "car_list"
+                ],
+                "summary": "Create a new car listing",
+                "operationId": "create_car_list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Category ID",
+                        "name": "category_id",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Title",
+                        "name": "title",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "Content",
+                        "name": "content",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "file"
+                        },
+                        "collectionFormat": "csv",
+                        "description": "Uploaded files",
+                        "name": "file",
+                        "in": "formData",
+                        "required": true
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Is the listing public?",
+                        "name": "is_public",
+                        "in": "formData",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/sell_car/car_list/{id}": {
+            "put": {
+                "tags": [
+                    "car_list"
+                ],
+                "operationId": "edit_car_list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "selling car data",
+                        "name": "selling",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RequestSellingCar"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "selling car id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "reply"
+                ],
+                "operationId": "reply_sell_car",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "reply data",
+                        "name": "reply",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.Reply"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "selling car id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "car_list"
+                ],
+                "operationId": "delete_car_list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "description": "selling car id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/sell_car/car_list/{id}/hide": {
+            "put": {
+                "tags": [
+                    "car_list"
+                ],
+                "operationId": "hide_car_list",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    },
+                    {
+                        "description": "want to hide or not",
+                        "name": "hide",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RequestHideList"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "description": "car_list id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "202": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/sell_car/category": {
+            "post": {
+                "tags": [
+                    "category"
+                ],
+                "operationId": "create-category",
+                "parameters": [
+                    {
+                        "description": "category data data",
+                        "name": "category_data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/requests.RequestCategory"
+                        }
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/sell_car/category/{id}": {
+            "delete": {
+                "tags": [
+                    "category"
+                ],
+                "operationId": "delete-category",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "category id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "string",
+                        "default": "Bearer \u003cAdd access token here\u003e",
+                        "description": "Insert your access token",
+                        "name": "Authorization",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/responses.NoDataResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/responses.BadRequestErrorResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/responses.UnauthorizedErrorResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/responses.InternalServerErrorResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "requests.LoginRequest": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "x-order": "0"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.MessageRequest": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "toUserID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "requests.Reply": {
+            "type": "object",
+            "required": [
+                "text"
+            ],
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "requests.RequestCategory": {
+            "type": "object",
+            "required": [
+                "category_name",
+                "is_public"
+            ],
+            "properties": {
+                "category_name": {
+                    "type": "string"
+                },
+                "is_public": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "requests.RequestHideList": {
+            "type": "object",
+            "properties": {
+                "is_show": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "requests.RequestSellingCar": {
+            "type": "object"
+        },
+        "responses.BadRequestErrorResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "x-order": "0",
+                    "example": false
+                },
+                "code": {
+                    "type": "integer",
+                    "x-order": "1",
+                    "example": 400
+                },
+                "error": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "x-order": "0",
+                            "example": "bad request error message"
+                        },
+                        "field": {
+                            "type": "object",
+                            "x-order": "1"
+                        }
+                    },
+                    "x-order": "2"
+                }
+            }
+        },
+        "responses.CarCategoriesResp": {
+            "type": "object",
+            "properties": {
+                "car_list": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.ListResp"
+                    }
+                },
+                "category_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.FileResp": {
+            "type": "object",
+            "properties": {
+                "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.InternalServerErrorResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "x-order": "0",
+                    "example": false
+                },
+                "code": {
+                    "type": "integer",
+                    "x-order": "1",
+                    "example": 500
+                },
+                "error": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "x-order": "0",
+                            "example": "internal server error"
+                        },
+                        "field": {
+                            "type": "object",
+                            "x-order": "1"
+                        }
+                    },
+                    "x-order": "2"
+                }
+            }
+        },
+        "responses.ListResp": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "type": "string"
+                },
+                "file_img": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.FileResp"
+                    }
+                },
+                "reply": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/responses.ReplyResp"
+                    }
+                },
+                "title": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.LoginResponse": {
+            "type": "object",
+            "properties": {
+                "access_token": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.MessageResp": {
+            "type": "object",
+            "properties": {
+                "createdAt": {
+                    "type": "string"
+                },
+                "fromUserID": {
+                    "type": "integer"
+                },
+                "message": {
+                    "type": "string"
+                },
+                "toUserID": {
+                    "type": "integer"
+                }
+            }
+        },
+        "responses.NoData": {
+            "type": "object"
+        },
+        "responses.NoDataResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "x-order": "0",
+                    "example": true
+                },
+                "code": {
+                    "type": "integer",
+                    "x-order": "1"
+                },
+                "data": {
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/responses.NoData"
+                        }
+                    ],
+                    "x-order": "2"
+                }
+            }
+        },
+        "responses.ReplyResp": {
+            "type": "object",
+            "properties": {
+                "text": {
+                    "type": "string"
+                }
+            }
+        },
+        "responses.Success": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {},
+                "status": {
+                    "type": "boolean"
+                }
+            }
+        },
+        "responses.TokenResponse": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "$ref": "#/definitions/responses.LoginResponse"
+                },
+                "status": {
+                    "type": "boolean",
+                    "example": true
+                }
+            }
+        },
+        "responses.UnauthorizedErrorResponse": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "x-order": "0",
+                    "example": false
+                },
+                "code": {
+                    "type": "integer",
+                    "x-order": "1",
+                    "example": 401
+                },
+                "error": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "x-order": "0",
+                            "example": "unauthorized to access the resource"
+                        },
+                        "field": {
+                            "type": "object",
+                            "x-order": "1"
+                        }
+                    },
+                    "x-order": "2"
+                }
+            }
+        },
+        "responses.Validate": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "boolean",
+                    "x-order": "0"
+                },
+                "code": {
+                    "type": "integer",
+                    "x-order": "1",
+                    "example": 422
+                },
+                "error": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "x-order": "0",
+                            "example": "validate error"
+                        },
+                        "field": {
+                            "type": "object",
+                            "additionalProperties": {
+                                "type": "string"
+                            },
+                            "x-order": "1"
+                        }
+                    },
+                    "x-order": "2"
+                }
+            }
+        }
+    }
+}
